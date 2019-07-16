@@ -1,0 +1,150 @@
+<template>
+<div class="camare">
+  <div class='show'>
+   <div :class="{'pictureNormal':normalsize,'pictureFull':fullSize}" :style="'backgroundImage:url('+outputURL+')'"></div>
+  <!-- <img :src="outputURL" alt="" class='pictureSize'> -->
+  <span v-show='spaninfo' class='spanInfo' >点击重新拍摄</span>
+  </div>
+  <input type="file" accept="image/*"  @change="handlechange" class="show" style='margin-top:20px;opacity:0;zIndex:100'>
+</div>
+</template>
+<script>
+import ImageCompressor from 'image-compressor.js'
+import lrz from 'lrz'
+// let URL = window.URL || window.webkitURL
+export default {
+  props: ['data'],
+  mounted () {
+    this.outputURL = this.data.src
+  },
+
+  data () {
+    return {
+      outputURL: '',
+      // show: false，
+      spaninfo: false,
+      normalsize: true,
+      fullSize: false,
+      fullSizeIos: false
+    }
+  },
+  methods: {
+    postImg () {
+      this.$emit('getImg', this.outputURL, this.data.type)
+      this.spaninfo = true
+      this.normalsize = false
+      this.fullSize = true
+      // if (this.$route.query.platform === 'ios') {
+      //   this.fullSizeIos = true
+      // } else {
+      //   this.fullSize = true
+      // }
+    },
+    compressBolb: function (file) {
+      if (!file) {
+        return
+      }
+      // this.loading = true
+      let imgcompress = new ImageCompressor()
+      imgcompress.compress(file, {
+        checkOrientation: true,
+        maxWidth: undefined,
+        maxHeight: undefined,
+        minWidth: 0,
+        minHeight: 0,
+        width: undefined,
+        height: undefined,
+        quality: 0.8,
+        mimeType: '',
+        convertSize: 5000000
+      }).then((result) => {
+        if (URL) {
+          this.outputURL = URL.createObjectURL(result)
+        }
+        this.postImg()
+      }).catch((err) => {
+        this.show = false
+        console.log(err)
+      })
+    },
+    compressBase64 (file) {
+      lrz(file)
+        .then((rst) => {
+          // 处理成功会执行
+          this.outputURL = rst.base64
+          this.postImg()
+        })
+        .catch((err) => {
+          this.show = false
+          throw new Error(err)
+        })
+    },
+    handlechange: function (e) {
+      let file = e.target.files ? e.target.files[0] : null
+
+      if (file.size > 0) {
+        this.compressBase64(file)
+      }
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+@import url('../../style/variable');
+.camare {
+		.show {
+			width: 297px;
+			height: 188px;
+			overflow: hidden;
+			position: absolute;
+			top: 0;
+      left: 0;
+		}
+    .pictureSize{
+      width:297px;
+      height:188px;
+    }
+		.pictureFull {
+			width:297px;
+			height:100%;
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: 300px 400px;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
+      // box-shadow: 0px 0px 15px #f0f0f0;
+      
+    }
+    .pictureFullRotate{
+      // width:100%;
+			height:530px;
+			background-position: -125px center;
+			background-repeat: no-repeat;
+			background-size: 600px 600px;
+      border-radius: 15px;
+      transform: rotate(90deg); 
+    }
+    .pictureNormal{
+     	width: 100%;
+			height: 100%;
+			background-position: center center;
+			background-repeat: no-repeat;
+      background-size: 297px 188px;
+      //  box-shadow: 0px 0px 15px #f0f0f0;
+			// border-radius: 15px;
+    }
+		.spanInfo {
+			.font-dpr(28px);
+			width: 100%;
+			position: absolute;
+			bottom: 0;
+			padding: 10px 0 10px 0;
+			display: block;
+			background: rgba(0, 0, 0, 0.1);
+			color: #fff;
+			border-radius: 15px;
+      text-align: center;
+      z-index:1000;
+		}
+	}
+</style>
