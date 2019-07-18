@@ -4,7 +4,7 @@
       <el-form :inline="true" :model="form" ref="form" size="small" label-width="100px" >
         <el-row>
           <el-col :span="24" >
-            <el-form-item label="进件来源：" prop="appId">
+            <!-- <el-form-item label="进件来源：" prop="appId">
               <el-select
                 style="width:100%"
                 v-model="form.appId"
@@ -22,7 +22,7 @@
                   :value="item.sn">
                 </el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="姓名：" prop="userName">
               <el-input v-model="form.userName" placeholder="姓名"></el-input>
             </el-form-item>
@@ -55,7 +55,7 @@
             <el-form-item>
               <el-button type="primary" icon="el-icon-search" @click.native='onSearch'>查询</el-button>
               <el-button type="info" icon="el-icon-circle-close-outline" @click.native="onReset">重置</el-button>
-              <el-button type="success" icon="el-icon-upload2" @click.native='onExport'>导出</el-button>
+              <!-- <el-button type="success" icon="el-icon-upload2" @click.native='onExport'>导出</el-button> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -287,6 +287,34 @@ import staticApi from '@/api/list'
 import signObj from '@/utils/signSystem'
 import {exportExcel} from '@/utils/common'
 import { mapGetters } from 'vuex'
+const tableData = {
+  'code': 0,
+  'message': '成功',
+  'data': [{
+    'statusContacts': 20,
+    'statusTelecomOperator': 11,
+    'appName': '翼钱包',
+    'riskMobile': '15066111824',
+    'mobile': '150****1824',
+    'statusZhima': 20,
+    'twoElements': 20,
+    'idNumber': '370***********1528',
+    'statusChsi': 10,
+    'statusBasicOther': 10,
+    'riskIdNumber': '370305199201031528',
+    'realName': '袁丽',
+    'statusIdentity': 20,
+    'statusLiveness': 20,
+    'identityType': 'ocr',
+    'createTime': 1563256155185,
+    'appId': 'yipurse123456789',
+    'statusBasic': 20,
+    'statusInsure': 10,
+    'statusTaobao': 10,
+    'statusCertification': 10
+  }],
+  'count': 1
+}
 const tdOptions = [
   {label: '身份认证', value: 'statusIdentity'},
   {label: '活体认证', value: 'statusLiveness'},
@@ -399,8 +427,21 @@ export default {
     handleClick (row) {
       // console.log(row.appId)
       // console.log(signObj(row.appId).signSystem)
-      let url = `${process.env.FE_RISK_URL}?appId=${row.appId}&timestamp=${moment().format('YYYYMMDDHHmmss')}&name=${row.realName}&mobile=${row.riskMobile}&idCard=${row.riskIdNumber}&signSystem=${signObj(row.appId).signSystem}&staffCode=${this.info.staffCode}`
-      window.open(url)
+      // let url = `${process.env.FE_RISK_URL}?appId=${row.appId}&timestamp=${moment().format('YYYYMMDDHHmmss')}&name=${row.realName}&mobile=${row.riskMobile}&idCard=${row.riskIdNumber}&signSystem=${signObj(row.appId).signSystem}&staffCode=${this.info.staffCode}`
+      // let url = `${process.env.FE_RISK_URL}?appId=${row.appId}&timestamp=${moment().format('YYYYMMDDHHmmss')}&name=${row.realName}&mobile=${row.riskMobile}&idCard=${row.riskIdNumber}&signSystem=${signObj(row.appId).signSystem}&staffCode=${this.info.staffCode}`
+      // window.open(url)
+      this.$router.push({
+        path: '/credit',
+        query: {
+          appId: row.appId,
+          timestamp: moment().format('YYYYMMDDHHmmss'),
+          name: row.realName,
+          mobile: row.riskMobile,
+          idCard: row.riskIdNumber,
+          signSystem: signObj(row.appId).signSystem,
+          staffCode: 'yuanli'
+        }
+      })
     },
     // 获得参数
     getParam () {
@@ -477,31 +518,32 @@ export default {
     },
     // 查询
     getList (option = {}) {
-      this.loading = true
-      staticApi['STATICLIST'](Object.assign(
-        option,
-        this.getParam()
-      )).then(response => {
-        const result = response.data
-        if (result.code === 0) {
-          this.loading = false
-          this.tableData = result.data
-          this.tableTotal = result.count
-          // console.log(this.tableData)
-        } else {
-          this.loading = false
-          this.$message.warning({
-            message: result.message
-          })
-        }
-      }).catch(error => {
-        console.log(error)
-      })
+      this.tableData = tableData.data
+      // this.loading = true
+      // staticApi['STATICLIST'](Object.assign(
+      //   option,
+      //   this.getParam()
+      // )).then(response => {
+      //   const result = response.data
+      //   if (result.code === 0) {
+      //     this.loading = false
+      //     this.tableData = result.data
+      //     this.tableTotal = result.count
+      //     // console.log(this.tableData)
+      //   } else {
+      //     this.loading = false
+      //     this.$message.warning({
+      //       message: result.message
+      //     })
+      //   }
+      // }).catch(error => {
+      //   console.log(error)
+      // })
     }
   },
   created () {
-    // this.getList()
-    this.getOption()
+    this.getList()
+    // this.getOption()
   }
 }
 </script>

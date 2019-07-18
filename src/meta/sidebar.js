@@ -9,16 +9,16 @@ const staticBar = [
         key: 'list',
         ico: 'log',
         value: '认证列表'
-      },
-      {
-        key: 'manage',
-        ico: 'log',
-        value: '产品配置'
       }
+      // {
+      //   key: 'manage',
+      //   ico: 'log',
+      //   value: '产品配置'
+      // }
     ]
   }
 ]
-const async = true
+const async = false
 const formatSide = () => {
   // console.log(getSide())
   if (getSide() === 'null' || !getSide()) {

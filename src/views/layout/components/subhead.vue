@@ -5,18 +5,20 @@
         <svg-icon icon-class="cate" />
       </li>
       <li class="nav">
-        <router-link tag="a" to="/auths/list" active-class="routeActive">认证列表</router-link>
-        <router-link tag="a" to="/auths/manage" active-class="routeActive">产品配置</router-link>
+        <!-- <router-link tag="a" to="/auths/list" active-class="routeActive">认证列表</router-link>
+        <router-link tag="a" to="/auths/manage" active-class="routeActive">产品配置</router-link> -->
       </li>
       <li></li>
       <li class="info">
         <el-dropdown trigger="click">
           <span class="el-dropdown-link">
-            <el-button size="middle" type="danger" circle>{{(info.staffName && info.staffName) ? info.staffName.substring(0, 1) : ''}}</el-button>
+            <!-- <el-button size="middle" type="danger" circle>{{(info.staffName && info.staffName) ? info.staffName.substring(0, 1) : ''}}</el-button> -->
+            <el-button size="middle" type="danger" circle>测</el-button>
           </span>
           <el-dropdown-menu slot="dropdown"  style="width:200px;">
             <el-dropdown-item class="userinfo" disabled="">
-              <el-button size="mini" icon="el-icon-mobile-phone" circle style="margin-right:10px;"></el-button>{{info.staffName}}
+              <!-- <el-button size="mini" icon="el-icon-mobile-phone" circle style="margin-right:10px;"></el-button>{{info.staffName}} -->
+              <el-button size="mini" icon="el-icon-mobile-phone" circle style="margin-right:10px;"></el-button>测试
             </el-dropdown-item>
             <!-- <el-dropdown-item>个人资料</el-dropdown-item> -->
             <!-- <el-dropdown-item>帮助中心</el-dropdown-item> -->
